@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for FILE in `git diff --cached --name-only | grep .fs`; do
+    dotnet fantomas $FILE
+    git add $FILE
+done

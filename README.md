@@ -5,5 +5,5 @@
 ## Setup
 
 ```bash
-$ dotnet tool restore
+$ ./setup.sh
 ```
