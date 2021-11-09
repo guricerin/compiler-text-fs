@@ -1,0 +1,38 @@
+%{
+module Ch4.Lex.Parser
+
+open Ch4.Lex.Ast
+%}
+
+// トークンの定義
+%token UNDERBAR
+%token <string> ID
+%token <string> TSTRING
+%token <string> REAL
+%token <string> SPECIAL
+%token EOF
+
+// エントリーポイントの定義
+%start toplevel
+%type <Ast> toplevel
+
+%%
+// 文法規則の定義
+
+toplevel:
+    | tokens EOF { Tokens $1 }
+
+tok:
+    | UNDERBAR { Underbar }
+    | ID { Id $1 }
+    | REAL { Real $1 }
+    | TSTRING { TString $1 }
+    | SPECIAL { Special $1 }
+
+tokens:
+    | { [] }
+    | rev_tokens { List.rev $1 }
+
+rev_tokens:
+    | tok { [$1] }
+    | rev_tokens tok { $2 :: $1 }

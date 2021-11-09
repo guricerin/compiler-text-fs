@@ -1,6 +1,6 @@
 module Ch4.Lex.Token
 
-[<RequireQualifiedAccess>]
+// [<RequireQualifiedAccess>]
 type Token =
     | EOF
     | UNDERBAR

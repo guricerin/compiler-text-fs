@@ -4,7 +4,7 @@ module Ch4.Lex.Lexer
 
 open System
 open FSharp.Text.Lexing
-open Ch4.Lex.Token
+open Ch4.Lex.Parser
 
 let lexeme = LexBuffer<_>.LexemeString
 }
@@ -17,21 +17,23 @@ let num = digit+
 let frac = "." num
 let exp = ['e' 'E'] ("-"?) num
 let real = ("-"?) ((num frac? exp) | (num frac exp?))
-let ws = ' ' | "\t" | "\n" | "\r\n" | "\r"
+let wspace = [' ' '\t' '\r' '\n']
+let newline = ('\n' | '\r' '\n')
 let dquote = "\"" [^'\"']* "\""
 
 // 正規表現定義セクション
 rule main = parse
-    | dquote
-        {
-            lexbuf
-            |> lexeme
-            |> fun x -> x.Substring(1, x.Length - 2) // 先頭と末尾のダブルクォートを除去
-            |> Token.STRING
-        }
-    | "_" { Token.UNDERBAR }
-    | id { lexeme lexbuf |> Token.ID }
-    | real { lexeme lexbuf |> Token.REAL }
-    | ws { main lexbuf } // スペースを無視して再帰呼び出し
-    | eof { exit 0 }
-    | _ { lexeme lexbuf |> Token.SPECIAL }
+| dquote
+    {
+        lexbuf
+        |> lexeme
+        |> fun x -> x.Substring(1, x.Length - 2) // 先頭と末尾のダブルクォートを除去
+        |> TSTRING
+    }
+| "_" { UNDERBAR }
+| id { lexeme lexbuf |> ID }
+| real { lexeme lexbuf |> REAL }
+| wspace { main lexbuf } // スペースを無視して再帰呼び出し
+//| newline { lexbuf.StartPos <- lexbuf.StartPos.NextLine; main lexbuf }
+| eof { EOF }
+| _ { lexeme lexbuf |> SPECIAL }

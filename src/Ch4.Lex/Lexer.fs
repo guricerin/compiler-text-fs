@@ -2,61 +2,61 @@ module Ch4.Lex.Lexer
 
 open System
 open FSharp.Text.Lexing
-open Ch4.Lex.Token
+open Ch4.Lex.Parser
 
 let lexeme = LexBuffer<_>.LexemeString
 
 let trans: uint16 [] array =
     [|
        (* State 0 *)
-       [| 9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
+       [| 8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
           6us
           6us
-          9us
-          9us
-          7us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
+          8us
+          8us
           6us
-          9us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          6us
+          8us
           1us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
           5us
-          9us
-          9us
+          8us
+          8us
           4us
           4us
           4us
@@ -67,13 +67,13 @@ let trans: uint16 [] array =
           4us
           4us
           4us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
           3us
           3us
           3us
@@ -100,12 +100,12 @@ let trans: uint16 [] array =
           3us
           3us
           3us
-          9us
-          9us
-          9us
-          9us
+          8us
+          8us
+          8us
+          8us
           2us
-          9us
+          8us
           3us
           3us
           3us
@@ -132,201 +132,201 @@ let trans: uint16 [] array =
           3us
           3us
           3us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          9us
-          8us |]
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          8us
+          7us |]
        (* State 1 *)
-       [| 26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          25us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
+       [| 24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          23us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
           65535us |]
        (* State 2 *)
        [| 65535us
@@ -537,16 +537,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
           65535us
           65535us
           65535us
@@ -554,64 +554,64 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
           65535us
           65535us
           65535us
           65535us
           65535us
           65535us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
           65535us
           65535us
           65535us
@@ -695,29 +695,17 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          13us
+          11us
           65535us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
           12us
           65535us
           65535us
@@ -730,6 +718,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          10us
           65535us
           65535us
           65535us
@@ -750,7 +739,18 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          12us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          10us
           65535us
           65535us
           65535us
@@ -857,16 +857,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          11us
-          11us
-          11us
-          11us
-          11us
-          11us
-          11us
-          11us
-          11us
-          11us
+          9us
+          9us
+          9us
+          9us
+          9us
+          9us
+          9us
+          9us
+          9us
+          9us
           65535us
           65535us
           65535us
@@ -1139,7 +1139,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          10us
+          65535us
           65535us
           65535us
           65535us
@@ -1495,6 +1495,30 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          11us
+          65535us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          10us
           65535us
           65535us
           65535us
@@ -1526,31 +1550,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          10us
           65535us
           65535us
           65535us
@@ -1654,19 +1654,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          20us
           65535us
           65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
           65535us
           65535us
           65535us
@@ -1815,30 +1815,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          65535us
+          65535us
+          13us
+          13us
+          13us
+          13us
+          13us
+          13us
+          13us
+          13us
+          13us
           13us
           65535us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          12us
           65535us
           65535us
           65535us
@@ -1870,7 +1859,18 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          12us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
           65535us
           65535us
           65535us
@@ -1974,22 +1974,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          22us
           65535us
+          11us
           65535us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          65535us
-          65535us
-          65535us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
+          12us
           65535us
           65535us
           65535us
@@ -2001,7 +1998,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          65535us
+          10us
           65535us
           65535us
           65535us
@@ -2031,6 +2028,9 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          65535us
+          65535us
+          10us
           65535us
           65535us
           65535us
@@ -2158,6 +2158,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
+          14us
           65535us
           65535us
           65535us
@@ -2189,8 +2190,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          65535us
-          65535us
+          14us
           65535us
           65535us
           65535us
@@ -2294,31 +2294,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          65535us
-          13us
-          65535us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
-          14us
+          17us
           65535us
           65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          12us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
           65535us
           65535us
           65535us
@@ -2350,7 +2338,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          12us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
           65535us
           65535us
           65535us
@@ -2457,16 +2457,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
+          15us
+          15us
+          15us
+          15us
+          15us
+          15us
+          15us
+          15us
+          15us
+          15us
           65535us
           65535us
           65535us
@@ -2478,19 +2478,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          16us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          14us
           65535us
           65535us
           65535us
@@ -2510,7 +2498,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          16us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          14us
           65535us
           65535us
           65535us
@@ -2614,7 +2614,7 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          19us
+          65535us
           65535us
           65535us
           18us
@@ -2777,27 +2777,15 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          17us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
+          16us
           16us
           65535us
           65535us
@@ -2830,7 +2818,19 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          16us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
           65535us
           65535us
           65535us
@@ -2937,16 +2937,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
+          18us
+          18us
+          18us
+          18us
+          18us
+          18us
+          18us
+          18us
+          18us
+          18us
           65535us
           65535us
           65535us
@@ -3097,16 +3097,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          18us
-          18us
-          18us
-          18us
-          18us
-          18us
-          18us
-          18us
-          18us
-          18us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
           65535us
           65535us
           65535us
@@ -3257,16 +3257,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
-          20us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
+          19us
           65535us
           65535us
           65535us
@@ -3417,16 +3417,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
+          21us
           65535us
           65535us
           65535us
@@ -3577,81 +3577,81 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          21us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
+          22us
           65535us
           65535us
           65535us
@@ -3737,16 +3737,16 @@ let trans: uint16 [] array =
           65535us
           65535us
           65535us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
-          23us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
+          65535us
           65535us
           65535us
           65535us
@@ -3849,71 +3849,7 @@ let trans: uint16 [] array =
           65535us
           65535us |]
        (* State 24 *)
-       [| 65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          24us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+       [| 24us
           24us
           24us
           24us
@@ -3940,12 +3876,14 @@ let trans: uint16 [] array =
           24us
           24us
           24us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          23us
           24us
           24us
           24us
@@ -3972,361 +3910,103 @@ let trans: uint16 [] array =
           24us
           24us
           24us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us |]
-       (* State 25 *)
-       [| 65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us
-          65535us |]
-       (* State 26 *)
-       [| 26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          25us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
-          26us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
+          24us
           65535us |] |]
 
 let actions: uint16 [] =
@@ -4337,10 +4017,8 @@ let actions: uint16 [] =
        6us
        6us
        4us
-       4us
        5us
        6us
-       4us
        65535us
        65535us
        65535us
@@ -4371,14 +4049,14 @@ and main lexbuf =
         lexbuf
         |> lexeme
         |> fun x -> x.Substring(1, x.Length - 2) // 先頭と末尾のダブルクォートを除去
-        |> Token.STRING
+        |> TSTRING
 
         )
-    | 1 -> (Token.UNDERBAR)
-    | 2 -> (lexeme lexbuf |> Token.ID)
-    | 3 -> (lexeme lexbuf |> Token.REAL)
+    | 1 -> (UNDERBAR)
+    | 2 -> (lexeme lexbuf |> ID)
+    | 3 -> (lexeme lexbuf |> REAL)
     | 4 -> (main lexbuf)
-    | 5 -> (exit 0)
-    | 6 -> (lexeme lexbuf |> Token.SPECIAL)
+    | 5 -> (EOF)
+    | 6 -> (lexeme lexbuf |> SPECIAL)
     | _ -> failwith "main"
 

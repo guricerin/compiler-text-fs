@@ -1,27 +1,44 @@
 open System
 open System.IO
-open FSharp.Text.Lexing
 open Ch4.Lex
 
-let top file =
-    let stream =
-        File.ReadAllLines(file)
-        |> fun arr -> String.Join(" ", arr)
-        |> String.Concat
-        |> fun x -> x.Split([| " " |], StringSplitOptions.RemoveEmptyEntries)
+let parseAndPrint s =
+    s
+    |> ParserFacade.parse
+    |> function
+        | Ast.Tokens tokens -> tokens
+    |> List.iter (fun a -> printfn "%A" a)
 
-    for s in stream do
-        s
-        |> LexBuffer<_>.FromString
-        |> Lexer.main
-        |> fun tok -> tok.ToString()
-        |> printfn "%s"
+let repFile (filename: string) =
+    use reader =
+        new StreamReader(filename, Text.Encoding.UTF8)
+
+    let rec go () =
+        match reader.ReadLine() with
+        | null -> ()
+        | line ->
+            parseAndPrint line
+            go ()
+
+    go ()
+
+let repl () =
+    let rec go () =
+        printf "CoreML> "
+
+        match Console.ReadLine() with
+        | null -> ()
+        | line ->
+            parseAndPrint line
+            go ()
+
+    go ()
 
 [<EntryPoint>]
 let main argv =
     if argv.Length = 1 then
-        top argv.[0]
+        repFile argv.[0]
     else
-        ()
+        repl ()
 
     0 // return an integer exit code
