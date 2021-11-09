@@ -2,14 +2,18 @@
 
 open System
 open Ch2.TM
-
-// Define a function to construct a message to print
-let from whom =
-    sprintf "from %s" whom
+open TM
 
 [<EntryPoint>]
 let main argv =
-    printfn "%A" TM.a
-    let message = from "F#" // Call the function
-    printfn "Hello world %s" message
+    let p: Program =
+        (M,
+         [ DeltaEntry.create (M, I) (M, O, L)
+           DeltaEntry.create (M, O) (H, I, L)
+           DeltaEntry.create (M, B) (H, I, L) ])
+
+    let t = Tape.create [ I; I; I ] I []
+    let r = Eval.eval p t
+    printfn "%A" t
+    printfn "%A" r
     0 // return an integer exit code
