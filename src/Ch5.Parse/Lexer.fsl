@@ -1,0 +1,46 @@
+{
+module Ch5.Parse.Lexer
+
+open System
+open FSharp.Text.Lexing
+open Ch5.Parse.Parser
+
+let lexeme = LexBuffer<_>.LexemeString
+}
+
+let alpha = ['a'-'z'] | ['A'-'Z']
+let digit = ['0'-'9']
+let num = digit+
+let idchars = alpha | digit
+let id = alpha idchars*
+let ws = ' ' | '\t' | '\n' | '\r' | "\r\n"
+let dquote = "\"" [^'\"']* "\""
+
+rule main = parse
+| ws { main lexbuf }
+| "add" { ADD }
+| "sub" { SUB }
+| "mul" { MUL }
+| "div" { DIV }
+| "eq" { EQ }
+| "if" { IF }
+| "then" { THEN }
+| "else" { ELSE }
+| "true" { TRUE }
+| "false" { FALSE }
+| "fn" { FN }
+| "fun" { FUN }
+| "val" { VAL }
+| "(" { LPAREN }
+| ")" { RPAREN }
+| "," { COMMA }
+| ";" { SEMICOLON }
+| "=" { EQUAL }
+| "=>" { DARROW }
+| "#1" { HASH1 }
+| "#2" { HASH2 }
+| id { lexeme lexbuf |> ID }
+| num { lexeme lexbuf |> int |> INT }
+| "-" num { lexeme lexbuf |> int |> INT }
+| eof { EOF }
+| _ { lexeme lexbuf |> ID }
