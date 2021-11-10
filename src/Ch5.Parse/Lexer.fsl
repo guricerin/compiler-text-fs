@@ -14,7 +14,7 @@ let num = digit+
 let idchars = alpha | digit
 let id = alpha idchars*
 let ws = ' ' | '\t' | '\n' | '\r' | "\r\n"
-let dquote = "\"" [^'\"']* "\""
+let dquote = "\"" idchars* "\""
 
 rule main = parse
 | ws { main lexbuf }
@@ -42,5 +42,11 @@ rule main = parse
 | id { lexeme lexbuf |> ID }
 | num { lexeme lexbuf |> int |> INT }
 | "-" num { lexeme lexbuf |> int |> INT }
+| dquote {
+    lexbuf
+    |> lexeme
+    |> fun x -> x.Substring(1, x.Length - 2) // 先頭と末尾のダブルクォートを除去
+    |> STRING
+}
 | eof { EOF }
 | _ { lexeme lexbuf |> ID }
