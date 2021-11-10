@@ -3,7 +3,9 @@ open System.IO
 open Ch5.Parse
 
 let parseAndPrint text =
-    text |> ParserFacade.parse |> printfn "%A"
+    text
+    |> ParserFacade.parse
+    |> fun (Syntax.Ast dec) -> printfn $"{dec}"
 
 let repFile (filename: string) =
     use reader =
@@ -28,7 +30,7 @@ let repl () =
             try
                 parseAndPrint line
             with
-            | ex -> printfn "%A" ex
+            | ex -> eprintfn "%A" ex
 
             go ()
 

@@ -1,4 +1,4 @@
-module Ch5.Parse.Syntax
+module Ch6.Type.Syntax
 
 /// 組み込みの二項演算子
 type PrimOp =
