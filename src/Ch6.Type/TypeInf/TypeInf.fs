@@ -14,10 +14,10 @@ let makeTypeError () = TypeError "type error"
 /// 持なければ例外エラー
 let rec private pts (absyn: Expr) : (TyEnv * Ty) =
     match absyn with
-    | Expr.Int i -> (TyEnv.empty, TyInt)
-    | Expr.EString str -> (TyEnv.empty, TyString)
-    | Expr.True
-    | Expr.False -> (TyEnv.empty, TyBool)
+    | ExprInt i -> (TyEnv.empty, TyInt)
+    | ExprString str -> (TyEnv.empty, TyString)
+    | ExprTrue
+    | ExprFalse -> (TyEnv.empty, TyBool)
     | ExprId tid ->
         let newTy = _tyVarHelper.NewTy()
         (TyEnv.singleton (tid, newTy), newTy)
