@@ -17,10 +17,10 @@ type PrimOp =
 
 type Expr =
     | ExprId of string
-    | Int of int
-    | EString of string
-    | True
-    | False
+    | ExprInt of int
+    | ExprString of string
+    | ExprTrue
+    | ExprFalse
     | ExprFn of string * Expr
     | ExprApp of Expr * Expr
     | ExprPair of Expr * Expr
@@ -32,10 +32,10 @@ type Expr =
     override this.ToString() =
         match this with
         | ExprId id -> id
-        | Int i -> $"{i}"
-        | EString s -> $"\"{s}\""
-        | True -> "true"
-        | False -> "false"
+        | ExprInt i -> $"{i}"
+        | ExprString s -> $"\"{s}\""
+        | ExprTrue -> "true"
+        | ExprFalse -> "false"
         | ExprFn (name, exp) -> $"(fn {name} => {exp})"
         | ExprApp (exp1, exp2) -> $"({exp1} {exp2})"
         | ExprIf (cond, conseq, alt) -> $"if {cond} then {conseq} else {alt}"

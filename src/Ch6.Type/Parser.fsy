@@ -52,10 +52,10 @@ atexpr:
     | primop LPAREN expr COMMA expr RPAREN { ExprPrim($1, $3, $5) }
 
 const:
-    | INT { Int $1 }
-    | STRING { EString $1 }
-    | TRUE { True }
-    | FALSE { False }
+    | INT { ExprInt $1 }
+    | STRING { ExprString $1 }
+    | TRUE { ExprTrue }
+    | FALSE { ExprFalse }
 
 primop:
     | EQ { Eq }
