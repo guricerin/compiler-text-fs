@@ -14,10 +14,10 @@ let makeTypeError () = TypeError "type error"
 /// 持なければ例外エラー
 let rec private pts (absyn: Expr) : (TyEnv * Ty) =
     match absyn with
-    | Expr.Int i -> (TyEnv.empty, Ty.Int)
-    | Expr.EString str -> (TyEnv.empty, Ty.String)
+    | Expr.Int i -> (TyEnv.empty, TyInt)
+    | Expr.EString str -> (TyEnv.empty, TyString)
     | Expr.True
-    | Expr.False -> (TyEnv.empty, Ty.Bool)
+    | Expr.False -> (TyEnv.empty, TyBool)
     | ExprId tid ->
         let newTy = _tyVarHelper.NewTy()
         (TyEnv.singleton (tid, newTy), newTy)
@@ -30,7 +30,7 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         let tyEnv3 =
             TyEnv.union (TyEnv.subst subst tyEnv1) (TyEnv.subst subst tyEnv2)
 
-        (tyEnv3, Subst.substTy subst (Ty.Pair(ty1, ty2)))
+        (tyEnv3, Subst.substTy subst (TyPair(ty1, ty2)))
     | ExprApp (expr1, expr2) ->
         let (tyEnv1, ty1) = pts expr1
         let (tyEnv2, ty2) = pts expr2
@@ -38,7 +38,7 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         let newTy = _tyVarHelper.NewTy()
 
         let subst =
-            unify ((Fun(ty2, newTy), ty1) :: tyEquations)
+            unify ((TyFun(ty2, newTy), ty1) :: tyEquations)
 
         let tyEnv3 =
             TyEnv.union (TyEnv.subst subst tyEnv1) (TyEnv.subst subst tyEnv2)
@@ -48,8 +48,8 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         let (tyEnv, ty) = pts expr
 
         match TyEnv.tryFind tyEnv fnName with
-        | Some domty -> (TyEnv.remove tyEnv fnName, Fun(domty, ty))
-        | None -> (tyEnv, Fun(_tyVarHelper.NewTy(), ty))
+        | Some domty -> (TyEnv.remove tyEnv fnName, TyFun(domty, ty))
+        | None -> (tyEnv, TyFun(_tyVarHelper.NewTy(), ty))
     | _ -> raise (makeTypeError ())
 
 /// 型推論（type inference）

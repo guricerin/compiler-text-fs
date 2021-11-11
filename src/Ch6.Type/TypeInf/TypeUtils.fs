@@ -12,18 +12,18 @@ module Subst =
     /// 型代入の適用
     let rec substTy (subst: Subst) (ty: Ty) : Ty =
         match ty with
-        | Int
-        | String
-        | Bool -> ty
+        | TyInt
+        | TyString
+        | TyBool -> ty
         | TyVar tid ->
             match subst with
             | Subst subst ->
                 match Map.tryFind tid subst with
                 | Some ty' -> ty'
                 | None -> ty
-        | Fun (ty1, ty2) -> Fun(substTy subst ty1, substTy subst ty2)
-        | Pair (ty1, ty2) -> Pair(substTy subst ty1, substTy subst ty2)
-        | Poly (tids, ty) -> Poly(tids, substTy subst ty)
+        | TyFun (ty1, ty2) -> TyFun(substTy subst ty1, substTy subst ty2)
+        | TyPair (ty1, ty2) -> TyPair(substTy subst ty1, substTy subst ty2)
+        | TyPoly (tids, ty) -> TyPoly(tids, substTy subst ty)
 
     let singleton (tid, ty) = [ (tid, ty) ] |> Map.ofList |> Subst
 
@@ -105,5 +105,5 @@ module TyEnv =
 
 let freshInst (ty: Ty) =
     match ty with
-    | Poly (tids, ty) -> ty // todo
+    | TyPoly (tids, ty) -> ty // todo
     | _ -> ty

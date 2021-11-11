@@ -8,8 +8,8 @@ let ftv (ty: Ty) : Set<string> =
     let rec scan ty se =
         match ty with
         | TyVar tid -> Set.add tid se
-        | Fun (domTy, ranTy) -> se |> scan domTy |> scan ranTy
-        | Pair (fstTy, sndTy) -> se |> scan fstTy |> scan sndTy
+        | TyFun (domTy, ranTy) -> se |> scan domTy |> scan ranTy
+        | TyPair (fstTy, sndTy) -> se |> scan fstTy |> scan sndTy
         | _ -> se
 
     scan ty Set.empty
@@ -51,8 +51,8 @@ let rec private rewrite (e: (Ty * Ty) list) (s: Subst) : Subst =
 
                     rewrite e2 s2
             | _, TyVar tid -> rewrite ((ty2, ty1) :: tail) s
-            | Fun (ty11, ty12), Fun (ty21, ty22) -> rewrite ((ty11, ty21) :: (ty12, ty22) :: tail) s
-            | Pair (ty11, ty12), Pair (ty21, ty22) -> rewrite ((ty11, ty21) :: (ty12, ty22) :: tail) s
+            | TyFun (ty11, ty12), TyFun (ty21, ty22) -> rewrite ((ty11, ty21) :: (ty12, ty22) :: tail) s
+            | TyPair (ty11, ty12), TyPair (ty21, ty22) -> rewrite ((ty11, ty21) :: (ty12, ty22) :: tail) s
             | _ -> raise (makeUnifyTyError ty1 ty2)
 
 /// 型の単一化（unifycation）

@@ -4,21 +4,21 @@ module TypeInf.Type
 type Ty =
     /// 型変数
     | TyVar of string
-    | Int
-    | String
-    | Bool
-    | Fun of Ty * Ty
-    | Pair of Ty * Ty
-    | Poly of string list * Ty
+    | TyInt
+    | TyString
+    | TyBool
+    | TyFun of Ty * Ty
+    | TyPair of Ty * Ty
+    | TyPoly of string list * Ty
     override this.ToString() =
         match this with
         | TyVar tid -> $"'{tid}"
-        | Int -> "int"
-        | String -> "string"
-        | Bool -> "bool"
-        | Fun (ty1, ty2) -> $"({ty1} -> {ty2})"
-        | Pair (ty1, ty2) -> $"({ty1} * {ty2})"
-        | Poly (tyIds, ty) ->
+        | TyInt -> "int"
+        | TyString -> "string"
+        | TyBool -> "bool"
+        | TyFun (ty1, ty2) -> $"({ty1} -> {ty2})"
+        | TyPair (ty1, ty2) -> $"({ty1} * {ty2})"
+        | TyPoly (tyIds, ty) ->
             let ids = String.concat "," tyIds
             $"[{ids}.{ty}]"
 
