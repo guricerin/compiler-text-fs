@@ -1,0 +1,109 @@
+module TypeInf.TypeUtils
+
+open Type
+
+/// 型代入 : 型変数の有限集合から型への写像
+type Subst = Subst of Map<string, Ty>
+
+[<RequireQualifiedAccess>]
+module Subst =
+    let empty = Map.empty |> Subst
+
+    /// 型代入の適用
+    let rec substTy (subst: Subst) (ty: Ty) : Ty =
+        match ty with
+        | Int
+        | String
+        | Bool -> ty
+        | TyVar tid ->
+            match subst with
+            | Subst subst ->
+                match Map.tryFind tid subst with
+                | Some ty' -> ty'
+                | None -> ty
+        | Fun (ty1, ty2) -> Fun(substTy subst ty1, substTy subst ty2)
+        | Pair (ty1, ty2) -> Pair(substTy subst ty1, substTy subst ty2)
+        | Poly (tids, ty) -> Poly(tids, substTy subst ty)
+
+    let singleton (tid, ty) = [ (tid, ty) ] |> Map.ofList |> Subst
+
+    /// 2つの型代入の和集合
+    let compose (Subst subst1) (Subst subst2) : Subst =
+        let subst3 =
+            Map.fold
+                (fun acc k v ->
+                    let v' = substTy (Subst subst1) v
+                    Map.add k v' acc)
+                Map.empty
+                subst2
+
+        let res =
+            Map.fold
+                (fun acc k v ->
+                    match Map.tryFind k acc with
+                    | Some v' -> acc
+                    | None -> Map.add k v acc)
+                subst3
+                subst1
+
+        res |> Subst
+
+/// 型環境 : 変数の有限集合から型への写像
+type TyEnv =
+    | TyEnv of Map<string, Ty>
+    override this.ToString() =
+        match this with
+        | TyEnv mp ->
+            mp
+            |> Map.toList
+            |> List.map (fun (tid, ty) -> $"{tid}:{ty}")
+            |> String.concat " , "
+            |> fun x -> sprintf "{%s}" x
+
+[<RequireQualifiedAccess>]
+module TyEnv =
+    let empty = Map.empty |> TyEnv
+
+    let tryFind (TyEnv env) (tid: string) : option<Ty> = Map.tryFind tid env
+
+    let subst (Subst senv) (TyEnv tyenv) : TyEnv =
+        Map.fold
+            (fun acc k v ->
+                let v' = Subst.substTy (Subst senv) v
+                Map.add k v' acc)
+            Map.empty
+            tyenv
+        |> TyEnv
+
+    let singleton (tid, ty) = [ (tid, ty) ] |> Map.ofList |> TyEnv
+
+    /// 2つの型環境の積集合
+    /// 同じ変数に型付けされた型の組の集合
+    let matches (TyEnv tyenv1) (TyEnv tyenv2) =
+        Map.fold
+            (fun acc var ty ->
+                match Map.tryFind var tyenv2 with
+                | Some ty' -> Set.add (ty, ty') acc
+                | None -> acc)
+            Set.empty
+            tyenv1
+        |> List.ofSeq
+
+    /// 2つの型環境の和集合
+    let union (TyEnv tyenv1) (TyEnv tyenv2) : TyEnv =
+        Map.fold
+            (fun acc k v ->
+                match Map.tryFind k acc with
+                // tyenv1の要素を優先
+                | Some v' -> acc
+                | None -> Map.add k v acc)
+            tyenv1
+            tyenv2
+        |> TyEnv
+
+    let remove (TyEnv tyenv) (tid: string) : TyEnv = Map.remove tid tyenv |> TyEnv
+
+let freshInst (ty: Ty) =
+    match ty with
+    | Poly (tids, ty) -> ty // todo
+    | _ -> ty

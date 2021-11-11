@@ -1,7 +1,7 @@
 %{
-module Ch6.Type.Parser
+module Parser.Parser
 
-open Ch6.Type.Syntax
+open Parser.Syntax
 %}
 
 %token ADD SUB MUL DIV EQ EQUAL

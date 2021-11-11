@@ -1,11 +1,13 @@
 open System
 open System.IO
-open Ch6.Type
+open Parser
+open TypeInf
 
-let parseAndPrint text =
-    text
-    |> ParserFacade.parse
-    |> fun (Syntax.Ast dec) -> printfn $"{dec}"
+let parseTyinfPrint text =
+    let ast = text |> ParserFacade.parse
+    printfn $"Parse Result:\n{ast}"
+    TypeInf.typeinf ast
+    printfn ""
 
 let repFile (filename: string) =
     use reader =
@@ -15,7 +17,7 @@ let repFile (filename: string) =
         match reader.ReadLine() with
         | null -> ()
         | line ->
-            parseAndPrint line
+            parseTyinfPrint line
             go ()
 
     go ()
@@ -28,9 +30,9 @@ let repl () =
         | null -> ()
         | line ->
             try
-                parseAndPrint line
+                parseTyinfPrint line
             with
-            | ex -> eprintfn "%A" ex
+            | ex -> eprintfn "%A\n" ex
 
             go ()
 

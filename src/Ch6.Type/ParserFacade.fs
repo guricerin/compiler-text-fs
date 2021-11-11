@@ -1,4 +1,4 @@
-module Ch6.Type.ParserFacade
+module Parser.ParserFacade
 
 open FSharp.Text.Lexing
 

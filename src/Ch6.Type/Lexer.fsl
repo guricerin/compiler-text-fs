@@ -1,9 +1,9 @@
 {
-module Ch6.Type.Lexer
+module Parser.Lexer
 
 open System
 open FSharp.Text.Lexing
-open Ch6.Type.Parser
+open Parser
 
 let lexeme = LexBuffer<_>.LexemeString
 }

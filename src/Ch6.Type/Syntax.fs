@@ -1,4 +1,4 @@
-module Ch6.Type.Syntax
+module Parser.Syntax
 
 /// 組み込みの二項演算子
 type PrimOp =
@@ -52,4 +52,8 @@ type Dec =
         match this with
         | Val (x, exp) -> $"val {x} = {exp}"
 
-type Ast = Ast of Dec
+type Ast =
+    | Ast of Dec
+    override this.ToString() =
+        match this with
+        | Ast dec -> $"{dec}"
