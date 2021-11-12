@@ -20,6 +20,8 @@
     <Compile Include="./TypeInf/TypeUtils.fs" />
     <Compile Include="./TypeInf/UnifyTy.fs" />
     <Compile Include="./TypeInf/TypeInf.fs" />
+    <Compile Include="./Eval/Value.fs" />
+    <Compile Include="./Eval/Eval.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
