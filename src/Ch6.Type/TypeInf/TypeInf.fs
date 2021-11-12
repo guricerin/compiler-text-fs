@@ -62,19 +62,21 @@ let singleTypeinf (Ast dec) =
     printfn $"Inferred Typing:\n{tyEnv}|- {expr} : {ty}"
 
 /// 多相型推論アルゴリズム W
+/// 型環境 gamma の下で、式 expr が持つ型と、gammaに含まれる型変数の制約を表現する型代入 S の組を計算
+/// 呼び出し前の式 expr の型 t と型環境 gamma は、呼び出し後においては、S(t) および S(gamma) となる
 let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
     match expr with
     | ExprInt i -> Subst.empty, TyInt
     | ExprString str -> Subst.empty, TyString
     | ExprTrue
     | ExprFalse -> Subst.empty, TyBool
-    | ExprId varName ->
-        match TyEnv.tryFind gamma varName with
+    | ExprId varId ->
+        match TyEnv.tryFind gamma varId with
         | Some ty -> Subst.empty, freshInst ty
         | None -> raise (makeTypeError ())
-    | ExprFn (fnName, expr') ->
+    | ExprFn (fnId, expr') ->
         let ty1 = _tyVarHelper.NewTy()
-        let newGamma = TyEnv.add fnName ty1 gamma
+        let newGamma = TyEnv.add fnId ty1 gamma
         let (s, ty2) = w newGamma expr'
         s, TyFun(Subst.apply s ty1, ty2)
     | ExprApp (expr1, expr2) ->
