@@ -10,7 +10,7 @@ module Subst =
     let empty = Map.empty |> Subst
 
     /// 型代入の適用
-    let rec substTy (subst: Subst) (ty: Ty) : Ty =
+    let rec apply (subst: Subst) (ty: Ty) : Ty =
         match ty with
         | TyInt
         | TyString
@@ -21,9 +21,9 @@ module Subst =
                 match Map.tryFind tid subst with
                 | Some ty' -> ty'
                 | None -> ty
-        | TyFun (ty1, ty2) -> TyFun(substTy subst ty1, substTy subst ty2)
-        | TyPair (ty1, ty2) -> TyPair(substTy subst ty1, substTy subst ty2)
-        | TyPoly (tids, ty) -> TyPoly(tids, substTy subst ty)
+        | TyFun (ty1, ty2) -> TyFun(apply subst ty1, apply subst ty2)
+        | TyPair (ty1, ty2) -> TyPair(apply subst ty1, apply subst ty2)
+        | TyPoly (tids, ty) -> TyPoly(tids, apply subst ty)
 
     let singleton (tid, ty) = [ (tid, ty) ] |> Map.ofList |> Subst
 
@@ -32,7 +32,7 @@ module Subst =
         let subst3 =
             Map.fold
                 (fun acc k v ->
-                    let v' = substTy (Subst subst1) v
+                    let v' = apply (Subst subst1) v
                     Map.add k v' acc)
                 Map.empty
                 subst2
@@ -70,7 +70,7 @@ module TyEnv =
     let subst (Subst senv) (TyEnv tyenv) : TyEnv =
         Map.fold
             (fun acc k v ->
-                let v' = Subst.substTy (Subst senv) v
+                let v' = Subst.apply (Subst senv) v
                 Map.add k v' acc)
             Map.empty
             tyenv
@@ -120,5 +120,5 @@ let freshInst (ty: Ty) : Ty =
                 Map.empty
             |> Subst
 
-        Subst.substTy subst ty'
+        Subst.apply subst ty'
     | _ -> ty

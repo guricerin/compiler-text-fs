@@ -30,7 +30,7 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         let tyEnv3 =
             TyEnv.union (TyEnv.subst subst tyEnv1) (TyEnv.subst subst tyEnv2)
 
-        (tyEnv3, Subst.substTy subst (TyPair(ty1, ty2)))
+        (tyEnv3, Subst.apply subst (TyPair(ty1, ty2)))
     | ExprApp (expr1, expr2) ->
         let (tyEnv1, ty1) = pts expr1
         let (tyEnv2, ty2) = pts expr2
@@ -43,7 +43,7 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         let tyEnv3 =
             TyEnv.union (TyEnv.subst subst tyEnv1) (TyEnv.subst subst tyEnv2)
 
-        (tyEnv3, Subst.substTy subst newTy)
+        (tyEnv3, Subst.apply subst newTy)
     | ExprFn (fnName, expr) ->
         let (tyEnv, ty) = pts expr
 
@@ -76,33 +76,33 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
         let ty1 = _tyVarHelper.NewTy()
         let newGamma = TyEnv.add fnName ty1 gamma
         let (s, ty2) = w newGamma expr'
-        s, TyFun(Subst.substTy s ty1, ty2)
+        s, TyFun(Subst.apply s ty1, ty2)
     | ExprApp (expr1, expr2) ->
         let (s1, ty1) = w gamma expr1
         let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
         let ty3 = _tyVarHelper.NewTy()
 
         let s3 =
-            unify [ (TyFun(ty2, ty3), Subst.substTy s2 ty1) ]
+            unify [ (TyFun(ty2, ty3), Subst.apply s2 ty1) ]
 
         let s4 = Subst.compose s3 (Subst.compose s2 s1)
-        s4, Subst.substTy s4 ty3
+        s4, Subst.apply s4 ty3
     | ExprPair (expr1, expr2) ->
         let (s1, ty1) = w gamma expr1
         let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
-        Subst.compose s2 s1, TyPair(Subst.substTy s2 ty1, ty2)
+        Subst.compose s2 s1, TyPair(Subst.apply s2 ty1, ty2)
     | ExprProj1 expr' ->
         let (s1, ty) = w gamma expr'
         let ty1 = _tyVarHelper.NewTy()
         let ty2 = _tyVarHelper.NewTy()
         let s2 = unify [ (ty, TyPair(ty1, ty2)) ]
-        Subst.compose s2 s1, Subst.substTy s2 ty1
+        Subst.compose s2 s1, Subst.apply s2 ty1
     | ExprProj2 expr' ->
         let (s1, ty) = w gamma expr'
         let ty1 = _tyVarHelper.NewTy()
         let ty2 = _tyVarHelper.NewTy()
         let s2 = unify [ (ty, TyPair(ty1, ty2)) ]
-        Subst.compose s2 s1, Subst.substTy s2 ty2
+        Subst.compose s2 s1, Subst.apply s2 ty2
     | ExprIf (cond, conseq, alt) ->
         let (s1, ty1) = w gamma cond
         let s2 = unify [ (ty1, TyBool) ]
@@ -123,7 +123,7 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
             |> Subst.compose s5
 
         let newGamma = TyEnv.subst s gamma
-        s, Subst.substTy s5 ty2
+        s, Subst.apply s5 ty2
     | ExprFix (funId, argId, expr') ->
         let argTy = _tyVarHelper.NewTy()
         let bodyTy = _tyVarHelper.NewTy()
@@ -137,13 +137,13 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
         let (s1, ty) = w newGamma expr'
         let s2 = unify [ (ty, bodyTy) ]
         let s = Subst.compose s2 s1
-        s, Subst.substTy s funTy
+        s, Subst.apply s funTy
     | ExprPrim (op, expr1, expr2) ->
         let (s1, ty1) = w gamma expr1
         let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
 
         let s3 =
-            unify [ (Subst.substTy s2 ty1, TyInt)
+            unify [ (Subst.apply s2 ty1, TyInt)
                     (ty2, TyInt) ]
 
         let ty3 =

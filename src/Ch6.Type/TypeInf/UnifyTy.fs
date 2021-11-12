@@ -47,7 +47,7 @@ let rec private rewrite (e: (Ty * Ty) list) (s: Subst) : Subst =
                     let s2 = Subst.compose s1 s
 
                     let e2 =
-                        List.map (fun (ty1, ty2) -> (Subst.substTy s1 ty1, Subst.substTy s1 ty2)) tail
+                        List.map (fun (ty1, ty2) -> (Subst.apply s1 ty1, Subst.apply s1 ty2)) tail
 
                     rewrite e2 s2
             | _, TyVar tid -> rewrite ((ty2, ty1) :: tail) s
