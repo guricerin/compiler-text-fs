@@ -22,6 +22,10 @@
     <Compile Include="./TypeInf/TypeInf.fs" />
     <Compile Include="./Eval/Value.fs" />
     <Compile Include="./Eval/Eval.fs" />
+    <Compile Include="./SECD/Instruction.fs" />
+    <Compile Include="./SECD/Value.fs" />
+    <Compile Include="./SECD/Comp.fs" />
+    <Compile Include="./SECD/Exec.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
