@@ -63,7 +63,7 @@ let singleTypeinf (Ast dec) =
 
 /// 多相型推論アルゴリズム W
 /// 型環境 gamma の下で、式 expr が持つ型と、gammaに含まれる型変数の制約を表現する型代入 S の組を計算
-/// 呼び出し前の式 expr の型 t と型環境 gamma は、呼び出し後においては、S(t) および S(gamma) となる
+/// 呼び出し前の式 expr の型 t と型環境 gamma は、呼び出し後の世界においては、S(t) および S(gamma) となる
 let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
     match expr with
     | ExprInt i -> Subst.empty, TyInt
@@ -109,20 +109,16 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
         let (s1, ty1) = w gamma cond
         let s2 = unify [ (ty1, TyBool) ]
 
-        let (s3, ty2) =
-            w (TyEnv.subst (Subst.compose s2 s1) gamma) conseq
+        let s21 = Subst.compose s2 s1
+        let (s3, ty2) = w (TyEnv.subst s21 gamma) conseq
 
-        let (s4, ty3) =
-            w (TyEnv.subst (Subst.compose s2 s1 |> Subst.compose s3) gamma) alt
+        let s321 = Subst.compose s3 s21
+        let (s4, ty3) = w (TyEnv.subst s321 gamma) alt
 
         let s5 = unify [ (ty2, ty3) ]
 
         let s =
-            s1
-            |> Subst.compose s2
-            |> Subst.compose s3
-            |> Subst.compose s4
-            |> Subst.compose s5
+            s321 |> Subst.compose s4 |> Subst.compose s5
 
         let newGamma = TyEnv.subst s gamma
         s, Subst.apply s5 ty2
