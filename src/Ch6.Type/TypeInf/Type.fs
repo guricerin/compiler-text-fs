@@ -1,6 +1,5 @@
 module TypeInf.Type
 
-// [<RequireQualifiedAccess>]
 type Ty =
     /// 型変数
     | TyVar of string

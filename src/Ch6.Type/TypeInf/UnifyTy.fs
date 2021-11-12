@@ -5,12 +5,12 @@ open TypeUtils
 
 /// 指定の型の中に現れる型変数の集合
 let ftv (ty: Ty) : Set<string> =
-    let rec scan ty se =
+    let rec scan ty tyVars =
         match ty with
-        | TyVar tid -> Set.add tid se
-        | TyFun (domTy, ranTy) -> se |> scan domTy |> scan ranTy
-        | TyPair (fstTy, sndTy) -> se |> scan fstTy |> scan sndTy
-        | _ -> se
+        | TyVar tid -> Set.add tid tyVars
+        | TyFun (domTy, ranTy) -> tyVars |> scan domTy |> scan ranTy
+        | TyPair (fstTy, sndTy) -> tyVars |> scan fstTy |> scan sndTy
+        | _ -> tyVars
 
     scan ty Set.empty
 

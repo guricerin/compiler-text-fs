@@ -27,7 +27,7 @@ module Subst =
 
     let singleton (tid, ty) = [ (tid, ty) ] |> Map.ofList |> Subst
 
-    /// 2つの型代入の和集合
+    /// 2つの型代入の合成
     let compose (Subst subst1) (Subst subst2) : Subst =
         let subst3 =
             Map.fold
