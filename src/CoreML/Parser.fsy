@@ -1,0 +1,65 @@
+%{
+module Parser.Parser
+
+open Parser.Syntax
+%}
+
+%token ADD SUB MUL DIV EQ EQUAL
+%token LPAREN RPAREN
+%token TRUE FALSE
+%token IF THEN ELSE
+%token FN FUN
+%token VAL
+%token DARROW
+%token HASH1 HASH2
+%token SEMICOLON COMMA
+%token <int> INT
+%token <string> STRING
+%token <string> ID
+%token EOF
+
+%start toplevel
+%type <Ast> toplevel
+
+%%
+
+toplevel:
+    | ast EOF { Ast $1 }
+    | ast SEMICOLON { Ast $1 }
+
+ast:
+    | dec { $1 }
+
+dec:
+    | VAL ID EQUAL expr { Val($2, $4) }
+    | FUN ID ID EQUAL expr { Val($2, ExprFix($2, $3, $5)) }
+
+expr:
+    | appexpr { $1 }
+    | IF expr THEN expr ELSE expr { ExprIf($2, $4, $6) }
+    | FN ID DARROW expr { ExprFn($2, $4) }
+
+appexpr:
+    | atexpr { $1 }
+    | appexpr atexpr { ExprApp($1, $2) }
+
+atexpr:
+    | const { $1 }
+    | ID { ExprId $1 }
+    | LPAREN expr COMMA expr RPAREN { ExprPair($2, $4) }
+    | HASH1 atexpr { ExprProj1 $2 }
+    | HASH2 atexpr { ExprProj2 $2 }
+    | primop LPAREN expr COMMA expr RPAREN { ExprPrim($1, $3, $5) }
+
+const:
+    | INT { ExprInt $1 }
+    | STRING { ExprString $1 }
+    | TRUE { ExprTrue }
+    | FALSE { ExprFalse }
+
+primop:
+    | EQ { Eq }
+    | ADD { Add }
+    | SUB { Sub }
+    | MUL { Mul }
+    | DIV { Div }
