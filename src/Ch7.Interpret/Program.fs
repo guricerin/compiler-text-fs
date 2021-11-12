@@ -1,12 +1,60 @@
-// Learn more about F# at http://docs.microsoft.com/dotnet/fsharp
-
 open System
+open System.IO
+open Parser
+open TypeInf
+open TypeUtils
 
-// Define a function to construct a message to print
-let from whom = sprintf "from %s" whom
+let parseTyinfPrint text gamma =
+    let ast = text |> ParserFacade.parse
+    printfn $"Parse Result:\n{ast}"
+    let newGamma = TypeInf.polyTypeInf gamma ast
+    printfn ""
+    newGamma
+
+let repFile (filename: string) =
+    use reader =
+        new StreamReader(filename, Text.Encoding.UTF8)
+
+    let rec go gamma =
+        let newGamma =
+            match reader.ReadLine() with
+            | null -> gamma
+            | line ->
+                try
+                    parseTyinfPrint line gamma
+                with
+                | ex ->
+                    eprintfn "%A\n" ex
+                    gamma
+
+        go newGamma
+
+    go TyEnv.empty
+
+let repl () =
+    let rec go gamma =
+        printf "CoreML> "
+
+        let newGamma =
+            match Console.ReadLine() with
+            | null -> gamma
+            | line ->
+                try
+                    parseTyinfPrint line gamma
+                with
+                | ex ->
+                    eprintfn "%A\n" ex
+                    gamma
+
+        go newGamma
+
+    go TyEnv.empty
 
 [<EntryPoint>]
 let main argv =
-    let message = from "F#" // Call the function
-    printfn "Hello world %s" message
+    if argv.Length = 1 then
+        repFile argv.[0]
+    else
+        repl ()
+
     0 // return an integer exit code

@@ -7,7 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Syntax.fs" />
+    <FsYacc Include="Parser.fsy">
+    </FsYacc>
+    <FsLex Include="Lexer.fsl">
+      <OtherFlags>--unicode</OtherFlags>
+    </FsLex>
+    <Compile Include="Parser.fs" />
+    <Compile Include="Lexer.fs" />
+    <Compile Include="ParserFacade.fs" />
+    <Compile Include="./TypeInf/Type.fs" />
+    <Compile Include="./TypeInf/TypeUtils.fs" />
+    <Compile Include="./TypeInf/UnifyTy.fs" />
+    <Compile Include="./TypeInf/TypeInf.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FsLexYacc" Version="10.2.0" />
   </ItemGroup>
 
 </Project>
