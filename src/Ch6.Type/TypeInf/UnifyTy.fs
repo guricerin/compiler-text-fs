@@ -56,5 +56,5 @@ let rec private rewrite (e: (Ty * Ty) list) (s: Subst) : Subst =
             | _ -> raise (makeUnifyTyError ty1 ty2)
 
 /// 型の単一化（unifycation）
-/// すべての (t1,t2) (e E について、S(t1) = S(t2) となる型変数への代入 S を E の単一化という
+/// E に含まれるすべての型変数の組 (t1,t2) について、S(t1) = S(t2) となる型変数への代入 S を E の単一化という
 let unify (e: (Ty * Ty) list) : Subst = rewrite e Subst.empty

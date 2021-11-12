@@ -2,41 +2,53 @@ open System
 open System.IO
 open Parser
 open TypeInf
+open TypeUtils
 
-let parseTyinfPrint text =
+let parseTyinfPrint text gamma =
     let ast = text |> ParserFacade.parse
     printfn $"Parse Result:\n{ast}"
-    TypeInf.typeinf ast
+    let newGamma = TypeInf.polyTypeInf gamma ast
     printfn ""
+    newGamma
 
 let repFile (filename: string) =
     use reader =
         new StreamReader(filename, Text.Encoding.UTF8)
 
-    let rec go () =
-        match reader.ReadLine() with
-        | null -> ()
-        | line ->
-            parseTyinfPrint line
-            go ()
+    let rec go gamma =
+        let newGamma =
+            match reader.ReadLine() with
+            | null -> gamma
+            | line ->
+                try
+                    parseTyinfPrint line gamma
+                with
+                | ex ->
+                    eprintfn "%A\n" ex
+                    gamma
 
-    go ()
+        go newGamma
+
+    go TyEnv.empty
 
 let repl () =
-    let rec go () =
+    let rec go gamma =
         printf "CoreML> "
 
-        match Console.ReadLine() with
-        | null -> ()
-        | line ->
-            try
-                parseTyinfPrint line
-            with
-            | ex -> eprintfn "%A\n" ex
+        let newGamma =
+            match Console.ReadLine() with
+            | null -> gamma
+            | line ->
+                try
+                    parseTyinfPrint line gamma
+                with
+                | ex ->
+                    eprintfn "%A\n" ex
+                    gamma
 
-            go ()
+        go newGamma
 
-    go ()
+    go TyEnv.empty
 
 [<EntryPoint>]
 let main argv =

@@ -64,8 +64,9 @@ type TyEnv =
 module TyEnv =
     let empty = Map.empty |> TyEnv
 
-    let tryFind (TyEnv env) (tid: string) : option<Ty> = Map.tryFind tid env
+    let tryFind (TyEnv env) (varName: string) : option<Ty> = Map.tryFind varName env
 
+    /// 型環境に型代入を適用
     let subst (Subst senv) (TyEnv tyenv) : TyEnv =
         Map.fold
             (fun acc k v ->
@@ -101,9 +102,23 @@ module TyEnv =
             tyenv2
         |> TyEnv
 
-    let remove (TyEnv tyenv) (tid: string) : TyEnv = Map.remove tid tyenv |> TyEnv
+    let remove (TyEnv tyenv) (varName: string) : TyEnv = Map.remove varName tyenv |> TyEnv
 
-let freshInst (ty: Ty) =
+    let add (varName: string) (ty: Ty) (TyEnv tyenv) : TyEnv = Map.add varName ty tyenv |> TyEnv
+
+/// 名前の衝突を防ぐために、既存の型変数を新たな型変数に置き換える
+/// 衝突したら型の多相性が失われるため
+let freshInst (ty: Ty) : Ty =
     match ty with
-    | TyPoly (tids, ty) -> ty // todo
+    | TyPoly (tids, ty') ->
+        let subst =
+            List.foldBack
+                (fun tid acc ->
+                    let newTy = _tyVarHelper.NewTy()
+                    Map.add tid newTy acc)
+                tids
+                Map.empty
+            |> Subst
+
+        Subst.substTy subst ty'
     | _ -> ty

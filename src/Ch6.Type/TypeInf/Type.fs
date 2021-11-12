@@ -8,6 +8,9 @@ type Ty =
     | TyBool
     | TyFun of Ty * Ty
     | TyPair of Ty * Ty
+    /// 多相型（Polymorphism）
+    /// ∀(t1,t2,...tn).T
+    /// 単相型 T における型変数 (t1,...tn) は任意の型に置き換えてもよい
     | TyPoly of string list * Ty
     override this.ToString() =
         match this with

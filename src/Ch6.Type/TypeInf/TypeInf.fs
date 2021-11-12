@@ -52,11 +52,119 @@ let rec private pts (absyn: Expr) : (TyEnv * Ty) =
         | None -> (tyEnv, TyFun(_tyVarHelper.NewTy(), ty))
     | _ -> raise (makeTypeError ())
 
-/// 型推論（type inference）
-let typeinf (Ast dec) =
+/// 単相型推論（type inference）
+let singleTypeinf (Ast dec) =
     let expr =
         match dec with
         | Val (id, expr) -> expr
 
     let (tyEnv, ty) = pts expr
     printfn $"Inferred Typing:\n{tyEnv}|- {expr} : {ty}"
+
+/// 多相型推論アルゴリズム W
+let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
+    match expr with
+    | ExprInt i -> Subst.empty, TyInt
+    | ExprString str -> Subst.empty, TyString
+    | ExprTrue
+    | ExprFalse -> Subst.empty, TyBool
+    | ExprId varName ->
+        match TyEnv.tryFind gamma varName with
+        | Some ty -> Subst.empty, freshInst ty
+        | None -> raise (makeTypeError ())
+    | ExprFn (fnName, expr') ->
+        let ty1 = _tyVarHelper.NewTy()
+        let newGamma = TyEnv.add fnName ty1 gamma
+        let (s, ty2) = w newGamma expr'
+        s, TyFun(Subst.substTy s ty1, ty2)
+    | ExprApp (expr1, expr2) ->
+        let (s1, ty1) = w gamma expr1
+        let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
+        let ty3 = _tyVarHelper.NewTy()
+
+        let s3 =
+            unify [ (TyFun(ty2, ty3), Subst.substTy s2 ty1) ]
+
+        let s4 = Subst.compose s3 (Subst.compose s2 s1)
+        s4, Subst.substTy s4 ty3
+    | ExprPair (expr1, expr2) ->
+        let (s1, ty1) = w gamma expr1
+        let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
+        Subst.compose s2 s1, TyPair(Subst.substTy s2 ty1, ty2)
+    | ExprProj1 expr' ->
+        let (s1, ty) = w gamma expr'
+        let ty1 = _tyVarHelper.NewTy()
+        let ty2 = _tyVarHelper.NewTy()
+        let s2 = unify [ (ty, TyPair(ty1, ty2)) ]
+        Subst.compose s2 s1, Subst.substTy s2 ty1
+    | ExprProj2 expr' ->
+        let (s1, ty) = w gamma expr'
+        let ty1 = _tyVarHelper.NewTy()
+        let ty2 = _tyVarHelper.NewTy()
+        let s2 = unify [ (ty, TyPair(ty1, ty2)) ]
+        Subst.compose s2 s1, Subst.substTy s2 ty2
+    | ExprIf (cond, conseq, alt) ->
+        let (s1, ty1) = w gamma cond
+        let s2 = unify [ (ty1, TyBool) ]
+
+        let (s3, ty2) =
+            w (TyEnv.subst (Subst.compose s2 s1) gamma) conseq
+
+        let (s4, ty3) =
+            w (TyEnv.subst (Subst.compose s2 s1 |> Subst.compose s3) gamma) alt
+
+        let s5 = unify [ (ty2, ty3) ]
+
+        let s =
+            s1
+            |> Subst.compose s2
+            |> Subst.compose s3
+            |> Subst.compose s4
+            |> Subst.compose s5
+
+        let newGamma = TyEnv.subst s gamma
+        s, Subst.substTy s5 ty2
+    | ExprFix (funId, argId, expr') ->
+        let argTy = _tyVarHelper.NewTy()
+        let bodyTy = _tyVarHelper.NewTy()
+        let funTy = TyFun(argTy, bodyTy)
+
+        let newGamma =
+            gamma
+            |> TyEnv.add funId funTy
+            |> TyEnv.add argId argTy
+
+        let (s1, ty) = w newGamma expr'
+        let s2 = unify [ (ty, bodyTy) ]
+        let s = Subst.compose s2 s1
+        s, Subst.substTy s funTy
+    | ExprPrim (op, expr1, expr2) ->
+        let (s1, ty1) = w gamma expr1
+        let (s2, ty2) = w (TyEnv.subst s1 gamma) expr2
+
+        let s3 =
+            unify [ (Subst.substTy s2 ty1, TyInt)
+                    (ty2, TyInt) ]
+
+        let ty3 =
+            match op with
+            | Eq -> TyBool
+            | _ -> TyInt
+
+        s1 |> Subst.compose s2 |> Subst.compose s3, ty3
+
+let polyTypeInf (gamma: TyEnv) (Ast dec) =
+    let (id, expr) =
+        match dec with
+        | Val (id, expr) -> id, expr
+
+    let (subst, ty) = w gamma expr
+    let tids = ftv ty |> List.ofSeq
+
+    let newTy =
+        match tids with
+        | [] -> ty
+        | _ -> TyPoly(tids, ty)
+
+    printfn $"Inferred Typing:\nval {id} : {newTy}"
+    TyEnv.add id newTy gamma
