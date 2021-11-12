@@ -19,7 +19,7 @@ let rec private evalExpr (env: ValEnv) (expr: Expr) : Value =
     | ExprString str -> ValString str
     | ExprTrue -> ValBool true
     | ExprFalse -> ValBool false
-    | ExprFn (id, expr') -> ValCls(env, id, expr')
+    | ExprFn (id, expr') -> ValCls(env, id, expr') // 外側（親ノード）のスコープの環境を参照する。ExprFixも同様。
     | ExprFix (fnId, domId, expr') -> ValRec(env, fnId, domId, expr')
     | ExprApp (expr1, expr2) ->
         let v1 = evalExpr env expr1

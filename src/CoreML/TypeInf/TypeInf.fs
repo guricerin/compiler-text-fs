@@ -73,7 +73,11 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
     | ExprId varId ->
         match TyEnv.tryFind gamma varId with
         | Some ty -> Subst.empty, freshInst ty
-        | None -> raise (makeTypeError ())
+        | None ->
+            let msg =
+                $"type var '{varId}' is not including the type env.\ntype env: {gamma}"
+
+            raise (TypeError msg)
     | ExprFn (fnId, expr') ->
         let ty1 = _tyVarHelper.NewTy()
         let newGamma = TyEnv.add fnId ty1 gamma
