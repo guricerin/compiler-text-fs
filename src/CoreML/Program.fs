@@ -1,6 +1,8 @@
 open System
 open System.IO
 
+open FSharp.CommandLine
+
 open Parser
 open TypeInf
 open TypeUtils
@@ -71,46 +73,63 @@ let rcpl (reader: StreamReader) (isInterctive: bool) =
 
     go TyEnv.empty SecdEnv.empty
 
-let printUsage () =
-    let msg =
-        "USAGE:
-  dotnet run <i|c> [path]
+type Mode =
+    | Interpret
+    | Compile
 
-FLAGS:
-  i       interpret
-  c       compile to SECD VM lang
+let modeOption =
+    commandOption {
+        names [ "m"; "mode" ]
+        description "Compile or Interpret (default mode: Compile)."
+        takes (regex @"c" |> asConst Compile)
+        takes (regex @"i" |> asConst Interpret)
+    }
 
-OPTIONS:
-  path    CoreML file path"
+let fileOption =
+    commandOption {
+        names [ "l"; "load-file" ]
+        description "Path to a CoreML file. Without this option, you'll be into interactive mode."
+        takes (format ("%s"))
+        suggests (fun _ -> [ CommandSuggestion.Files None ])
+    }
 
-    printfn "%s" msg
+let top (mode: Mode) (path: option<string>) =
+    match path with
+    | Some path ->
+        use reader =
+            new StreamReader(path, Text.Encoding.UTF8)
 
-let top (argv: string array) =
-    match argv.Length with
-    | 1 ->
+        match mode with
+        | Compile -> rcpl reader false
+        | Interpret -> repl reader false
+    | None ->
         use reader =
             new StreamReader(Console.OpenStandardInput(), Text.Encoding.UTF8)
 
-        match argv.[0] with
-        | "i" -> repl reader true
-        | "c" -> rcpl reader true
-        | _ -> printUsage ()
-    | 2 ->
-        use reader =
-            new StreamReader(argv.[1], Text.Encoding.UTF8)
+        match mode with
+        | Compile -> rcpl reader true
+        | Interpret -> repl reader true
 
-        match argv.[0] with
-        | "i" -> repl reader false
-        | "c" -> rcpl reader false
-        | _ -> printUsage ()
-    | _ -> printUsage ()
+let mainCommand () =
+    command {
+        name "CoreML"
+        description "  CoreML Processor."
+
+        opt file in fileOption |> CommandOption.zeroOrExactlyOne
+
+        opt mode in modeOption
+                    |> CommandOption.zeroOrExactlyOne
+                    |> CommandOption.whenMissingUse Compile
+
+        try
+            top mode file
+            return 0
+        with
+        | ex ->
+            eprintfn $"{ex}"
+            return 1
+    }
 
 [<EntryPoint>]
 let main argv =
-    try
-        top argv
-        0
-    with
-    | ex ->
-        eprintfn "%A" ex
-        1
+    mainCommand () |> Command.runAsEntryPoint argv

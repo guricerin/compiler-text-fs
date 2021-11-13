@@ -4,4 +4,24 @@
 
 ## Requirements
 
-- dotnet 5
+- dotnet 5 or later
+
+## Usage
+
+### Turing Machine Emulator
+
+```bash
+$ dotnet run -p ./src/TM
+```
+
+### CoreML Processor
+
+```bash
+$ dotnet run -p ./src/CoreML -m [c|i] -l [path/to/CoreMl/file]
+```
+
+```
+options:
+  -m, --mode={c|i}                  Compile or Interpret (default mode: Compile).
+  -l, --load-file=<STRING_VALUE>    Path to a CoreML file. Without this option, you'll be into interactive mode.
+```
