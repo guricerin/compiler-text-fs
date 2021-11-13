@@ -17,7 +17,7 @@ let ws = ' ' | '\t' | '\n' | '\r' | "\r\n"
 let dquote = "\"" idchars* "\""
 
 rule main = parse
-| ws { main lexbuf }
+| ws { main lexbuf } // 無視して再帰
 | "add" { ADD }
 | "sub" { SUB }
 | "mul" { MUL }
