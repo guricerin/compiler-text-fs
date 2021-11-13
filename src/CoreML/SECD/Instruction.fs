@@ -19,33 +19,21 @@ type Inst =
     | IProj1
     | IProj2
     | IPrim of SecdPrim
-    | IMkCls of string * Inst list
-    | IMkRec of string * string * Inst list
-    | IIf of Inst list * Inst list
+    | IMkCls of string * Code
+    | IMkRec of string * string * Code
+    | IIf of Code * Code
     /// 関数からのリターン命令
     | IRet
     override this.ToString() = sprintf "%A" this
-// match this with
-// | IPushI i -> $"PushI({i})"
-// | IPushS s -> $"PushS({s})"
-// | IPushB b -> $"PushB({b})"
-// | IAcc varId -> $"Acc({varId})"
-// | IApp -> "App"
-// | IPair -> "Pair"
-// | IProj1 -> "Proj1"
-// | IProj2 -> "Proj2"
-// | IPrim op ->
-//     let op =
-//         match op with
-//         | SecdEq -> "EQ"
-//         | SecdAdd -> "ADD"
-//         | SecdSub -> "SUB"
-//         | SecdMul -> "MUL"
-//         | SecdDiv -> "DIV"
 
-//     $"Prim({op})"
-// | IMkCls(domId, code)->
-
-type Code =
+and Code =
     | Code of Inst list
     override this.ToString() = sprintf "%A" this
+
+[<RequireQualifiedAccess>]
+module Code =
+    let empty = [] |> Code
+
+    let push (inst: Inst) (Code k) : Code = inst :: k |> Code
+
+    let append (Code c) (Code k) : Code = List.append c k |> Code

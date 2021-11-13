@@ -4,14 +4,19 @@ open System.IO
 open Parser
 open TypeInf
 open TypeUtils
-open Eval
-open Value
+// open Eval
+// open Value
+open SECD
+open SECD.Value
+
 
 let parseTyinfPrint text gamma env =
     let ast = text |> ParserFacade.parse
     printfn $"Parse Result:\n{ast}"
     let newGamma = TypeInf.polyTypeInf gamma ast
-    let newEnv = Eval.eval env ast
+    let namedCode = Comp.compile ast
+    let newEnv = Exec.run env namedCode
+    // let newEnv = Eval.eval env ast
     printfn ""
     newGamma, newEnv
 
@@ -33,16 +38,20 @@ let repFile (filename: string) =
 
         go newGamma newEnv
 
-    go TyEnv.empty ValEnv.empty
+    go TyEnv.empty SecdEnv.empty
 
 let repl () =
     let rec go gamma env =
         printf "CoreML> "
 
         let (newGamma, newEnv) =
-            match Console.ReadLine() with
-            | null -> gamma, env
-            | line ->
+            let b = String.IsNullOrEmpty("")
+
+            let line = Console.ReadLine()
+
+            if String.IsNullOrWhiteSpace(line) then
+                gamma, env
+            else
                 try
                     parseTyinfPrint line gamma env
                 with
@@ -52,7 +61,7 @@ let repl () =
 
         go newGamma newEnv
 
-    go TyEnv.empty ValEnv.empty
+    go TyEnv.empty SecdEnv.empty
 
 [<EntryPoint>]
 let main argv =
