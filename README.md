@@ -1,4 +1,4 @@
-# compiler-text
+# compiler-text-fs
 
 [『コンパイラ ー 原理と構造』](https://www.kyoritsu-pub.co.jp/bookdetail/9784320124783)のF#への翻訳。
 
