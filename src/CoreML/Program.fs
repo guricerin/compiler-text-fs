@@ -33,10 +33,10 @@ let doCompile text gamma env =
     printfn ""
     newGamma, newEnv
 
-let repl (reader: StreamReader) (isInterctive: bool) =
+let repl (reader: StreamReader) (isInteractive: bool) =
     let rec go gamma env =
         let (newGamma, newEnv) =
-            if isInterctive then printf "# "
+            if isInteractive then printf "# "
             let line = reader.ReadLine()
 
             if String.IsNullOrWhiteSpace(line) then
@@ -51,12 +51,12 @@ let repl (reader: StreamReader) (isInterctive: bool) =
 
         go newGamma newEnv
 
-    go TyEnv.empty ValEnv.empty
+    go TyEnv.empty ValEnv.empty |> ignore
 
-let rcpl (reader: StreamReader) (isInterctive: bool) =
+let rcpl (reader: StreamReader) (isInteractive: bool) =
     let rec go gamma env =
         let (newGamma, newEnv) =
-            if isInterctive then printf "# "
+            if isInteractive then printf "# "
             let line = reader.ReadLine()
 
             if String.IsNullOrWhiteSpace(line) then
@@ -71,7 +71,7 @@ let rcpl (reader: StreamReader) (isInterctive: bool) =
 
         go newGamma newEnv
 
-    go TyEnv.empty SecdEnv.empty
+    go TyEnv.empty SecdEnv.empty |> ignore
 
 type Mode =
     | Interpret
