@@ -92,11 +92,10 @@ let rec private evalExpr (env: ValEnv) (expr: Expr) : Value =
         | Div -> ValInt(i1 / i2)
         | Eq -> ValBool(i1 = i2)
 
-let eval (env: ValEnv) (Ast dec) : ValEnv =
+let eval (env: ValEnv) (Ast dec) : (ValEnv * string * Value) =
     let (id, expr) =
         match dec with
         | Val (id, expr) -> id, expr
 
     let v = evalExpr env expr
-    printfn $"Evaluated to:\nval {id} = {v}"
-    ValEnv.add id v env
+    ValEnv.add id v env, id, v

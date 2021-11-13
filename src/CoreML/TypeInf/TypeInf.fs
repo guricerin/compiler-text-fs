@@ -75,7 +75,7 @@ let rec private w (gamma: TyEnv) (expr: Expr) : Subst * Ty =
         | Some ty -> Subst.empty, freshInst ty
         | None ->
             let msg =
-                $"type var '{varId}' is not including the type env.\ntype env: {gamma}"
+                $"type var '{varId}' is not included in the type env.\ntype env: {gamma}"
 
             raise (TypeError msg)
     | ExprFn (fnId, expr') ->
@@ -168,5 +168,4 @@ let polyTypeInf (gamma: TyEnv) (Ast dec) =
         | [] -> ty
         | _ -> TyPoly(tids, ty)
 
-    printfn $"Inferred Typing:\nval {id} : {newTy}"
-    TyEnv.add id newTy gamma
+    (TyEnv.add id newTy gamma, id, newTy)

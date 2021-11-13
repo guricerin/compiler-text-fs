@@ -15,10 +15,10 @@ type Value =
         match this with
         | ValInt i -> $"{i}"
         | ValBool b -> $"{b}"
-        | ValString s -> sprintf "\"%s\"" s
+        | ValString s -> $"\"{s}\""
         | ValPair (v1, v2) -> $"({v1},{v2})"
-        | ValCls (env, x, expr) -> "fn"
-        | ValRec (env, f, x, expr) -> "fix"
+        | ValCls (_, _, _) -> "fn"
+        | ValRec (_, _, _, _) -> "fix"
 
 /// 変数：値
 and ValEnv = ValEnv of Map<string, Value>

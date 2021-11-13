@@ -51,5 +51,4 @@ let compile (Ast dec) : string * Code =
         | Val (id, expr) -> id, expr
 
     let code = comp expr Code.empty
-    printfn $"Compiled to:\n{code}"
     id, code

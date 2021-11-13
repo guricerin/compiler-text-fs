@@ -53,8 +53,7 @@ let rec private exec (stack: SecdValue list) (env: SecdEnv) (Code code) (dump: (
         raise (RuntimeError msg)
 
 /// 中間言語表現を実行
-let run (env: SecdEnv) ((valId, code): string * Code) : SecdEnv =
+let run (env: SecdEnv) ((valId, code): string * Code) : (SecdEnv * string * SecdValue) =
     let v = exec [] env code []
     let newEnv = SecdEnv.add valId v env
-    printfn $"Execution result:\nval {valId} = {v}"
-    newEnv
+    newEnv, valId, v
